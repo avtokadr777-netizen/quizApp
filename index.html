@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <title>Multikulturalizm İmtahanı</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      animation: fadeIn 1s ease-in;
+    }
+    h1 {
+      background: #191970;
+      color: white;
+      padding: 20px;
+      margin: 0;
+      animation: slideDown 1s ease-out;
+    }
+    .question {
+      font-size: 22px;
+      margin: 20px;
+      color: #191970;
+      animation: fadeIn 0.8s ease-in;
+    }
+    .options button {
+      display: block;
+      margin: 10px auto;
+      padding: 12px 25px;
+      background: #add8e6;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+    .options button:hover {
+      transform: scale(1.05);
+      background: #87ceeb;
+    }
+    .options button.correct { background: #90ee90 !important; }
+    .options button.wrong { background: #ff6347 !important; }
+    #result {
+      font-size: 20px;
+      margin-top: 30px;
+      animation: fadeIn 1s ease-in;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    @keyframes slideDown {
+      from {transform: translateY(-50px); opacity: 0;}
+      to {transform: translateY(0); opacity: 1;}
+    }
+  </style>
+</head>
+<body>
+  <h1>🌍 Multikulturalizm İmtahanı 🌍</h1>
+  <div id="quiz"></div>
+  <div id="result"></div>
+
+<script>
+const questions = [
+  {text:"Multikulturalizm fənni nəyi öyrənir?", options:["Mədəniyyətlərin qarşılıqlı hörmətlə yaşaması","İqtisadi inkişaf","Texnologiya tarixi"], correct:0},
+  {text:"Multikulturalizmin əsas məqsədi nədir?", options:["İqtisadi böyümə","Tolerantlıq və sosial sabitlik","Texniki tərəqqi"], correct:1},
+  {text:"Multikulturalizm hansı elmlərlə sıx bağlıdır?", options:["Riyaziyyat və fizika","Kimya və biologiya","Sosiologiya, politologiya, fəlsəfə"], correct:2},
+  {text:"Multikulturalizm siyasətində əsas dəyər nədir?", options:["İqtisadiyyat","Tolerantlıq","Texnologiya"], correct:1},
+  {text:"Azərbaycan multikulturalizm modeli hansı prinsiplərə əsaslanır?", options:["Texniki tərəqqi","Milli-mədəni müxtəliflik və tolerantlıq","İqtisadi inkişaf"], correct:1},
+  {text:"Multikulturalizm hansı dövlətdə dövlət siyasəti səviyyəsinə yüksəlib?", options:["Fransa","Azərbaycan","Yaponiya"], correct:1},
+  {text:"Multikulturalizmin əsas şərti nədir?", options:["İqtisadi böyümə","Texniki tərəqqi","Mədəniyyətlərarası dialoq"], correct:2},
+  {text:"Multikulturalizm hansı dövrdə daha da aktuallaşdı?", options:["Antik dövrdə","Qloballaşma dövründə","Orta əsrlərdə"], correct:1},
+  {text:"Multikulturalizmin əsas prinsiplərindən biri nədir?", options:["İqtisadiyyat","Texnologiya","Bərabərlik və hörmət"], correct:2},
+  {text:"Multikulturalizm hansı sahədə sabitlik yaradır?", options:["Texniki sahədə","Sosial sahədə","İqtisadi sahədə"], correct:1},
+  {text:"Multikulturalizmin inkişafı üçün əsas amil nədir?", options:["Texniki tərəqqi","Tolerantlıq siyasəti","İqtisadi böyümə"], correct:1},
+  {text:"Multikulturalizm hansı dinlərarası münasibətləri öyrənir?", options:["Münaqişə","Texnologiya","Sülh və hörmət"], correct:2},
+  {text:"Multikulturalizm hansı ölkədə dövlət siyasətidir?", options:["Azərbaycan","Almaniya","Çin"], correct:0},
+  {text:"Multikulturalizmin əsas məqsədi nəyi qorumaqdır?", options:["Texnologiyanı","İqtisadiyyatı","Mədəni müxtəlifliyi"], correct:2},
+  {text:"Multikulturalizm hansı sahədə vacibdir?", options:["Texniki sahədə","Cəmiyyət həyatında","İqtisadiyyatda"], correct:1},
+  {text:"Multikulturalizm hansı münasibətləri gücləndirir?", options:["Texniki əlaqələri","İqtisadi əlaqələri","Mədəniyyətlərarası münasibətləri"], correct:2},
+  {text:"Multikulturalizm hansı dövlətdə nümunəvi modeldir?", options:["Azərbaycan","Rusiya","ABŞ"], correct:0},
+  {text:"Multikulturalizmin əsas ideyası nədir?", options:["Texniki tərəqqi","Mədəniyyətlərin birgə yaşaması","İqtisadi böyümə"], correct:1},
+  {text:"Multikulturalizm hansı siyasətlə bağlıdır?", options:["İqtisadi siyasət","Texniki siyasət","Tolerantlıq siyasəti"], correct:2},
+  {text:"Multikulturalizm hansı dövrdə daha çox inkişaf edib?", options:["Orta əsrlərdə","Müasir dövrdə","Antik dövrdə"], correct:1},
+  {text:"Multikulturalizm hansı sahədə vacib rol oynayır?", options:["Texniki tərəqqidə","İqtisadiyyatda","Sosial sabitlikdə"], correct:2},
+  {text:"Multikulturalizm hansı münasibətləri öyrənir?", options:["Texniki əlaqələri","Mədəniyyətlərarası münasibətləri","İqtisadi əlaqələri"], correct:1},
+  {text:"Multikulturalizm hansı dövlətdə dövlət siyasətidir?", options:["Fransa","Azərbaycan","Yaponiya"], correct:1},
+  {text:"Multikulturalizmin əsas prinsipi nədir?", options:["Texniki tərəqqi","Tolerantlıq və hörmət","İqtisadi böyümə"], correct:1},
+  {text:"Multikulturalizm hansı nəticəni təmin edir?", options:["Texniki tərəqqi","İqtisadi böyümə","Sosial sabitlik"], correct:2}
+];
+
+let current = 0, score = 0;
+
+function showQuestion() {
+  if (current >= questions.length) {
+    document.getElementById("quiz").innerHTML = "";
+    document.getElementById("result").innerHTML =
+      "Topladığınız bal: " + score + "/" + (questions.length*2) +
+      (score>=40 ? "<br>🎉 Təbriklər! İmtahana hazırsan!" : "<br>📚 Bir az təkrar et!");
+    return;
+  }
+  const q = questions[current];
+  let html = `<div class='question'>${q.text}</div><div class='options'>`;
+  q.options.forEach((opt,i)=>{
+    html += `<button onclick="checkAnswer(${i})">${opt}</button>`;
+  });
+  html += "</div>";
+  document.getElementById("quiz").innerHTML = html;
+}
+
+function checkAnswer(i) {
+  const buttons = document.querySelectorAll(".options button");
+  if (i === questions[current].correct) {
+    score += 2;
+    buttons[i].classList.add("correct");
+    alert("✅ Düzgün cavab! +2 bal");
+  } else {
+    buttons[i].classList.add("wrong");
+    alert("❌ Yanlış cavab!");
+  }
+  current++;
+  setTimeout(showQuestion, 600);
+}
+
+showQuestion();
+</script>
+</body>
+</html>
